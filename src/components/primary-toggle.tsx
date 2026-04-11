@@ -24,7 +24,7 @@ const PrimaryToggle = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent
         align="end"
-        className="flex flex-wrap w-[180px] gap-2 p-2"
+        className="flex flex-wrap w-45 gap-2 p-2"
       >
         <DropdownMenuItem
           className="bg-red-700 hover:bg-red-800 rounded-full block px-3 py-3 text-sm cursor-pointer"

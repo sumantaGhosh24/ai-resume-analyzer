@@ -1,6 +1,7 @@
 import type {Metadata} from "next";
 import {Geist, Geist_Mono} from "next/font/google";
 
+import Navbar from "@/components/navbar";
 import {ThemeProvider} from "@/components/theme-provider";
 import PrimaryColorProvider from "@/components/primary-provider";
 import {Toaster} from "@/components/ui/sonner";
@@ -31,7 +32,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className="scroll-smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
       >
@@ -42,6 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <PrimaryColorProvider>
+            <Navbar />
             <main>{children}</main>
             <Toaster />
           </PrimaryColorProvider>
