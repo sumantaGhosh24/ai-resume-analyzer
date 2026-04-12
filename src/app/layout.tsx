@@ -5,6 +5,7 @@ import Navbar from "@/components/navbar";
 import {ThemeProvider} from "@/components/theme-provider";
 import PrimaryColorProvider from "@/components/primary-provider";
 import {Toaster} from "@/components/ui/sonner";
+import {TRPCReactProvider} from "@/trpc/client";
 
 import "./globals.css";
 
@@ -43,9 +44,11 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <PrimaryColorProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Toaster />
+            <TRPCReactProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Toaster />
+            </TRPCReactProvider>
           </PrimaryColorProvider>
         </ThemeProvider>
       </body>
