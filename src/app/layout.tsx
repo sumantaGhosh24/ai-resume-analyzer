@@ -47,7 +47,7 @@ export default function RootLayout({
             <TRPCReactProvider>
               <Navbar />
               <main>{children}</main>
-              <Toaster />
+              <Toaster position="top-right" closeButton={true} />
             </TRPCReactProvider>
           </PrimaryColorProvider>
         </ThemeProvider>
