@@ -4,9 +4,11 @@ import {useState} from "react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
+import {toast} from "sonner";
 import {ChessKingIcon, MenuIcon, XIcon} from "lucide-react";
 
 import {guestLinks, userLinks} from "@/constants/landing";
+import {authClient} from "@/lib/auth-client";
 
 import {usePrimaryColor} from "./primary-provider";
 import {ModeToggle} from "./mode-toggle";
@@ -28,11 +30,18 @@ const Navbar = () => {
 
   const {primaryColor} = usePrimaryColor();
 
-  const session = null;
-  const isPending = false;
+  const {data: session, isPending: loading} = authClient.useSession();
 
   const handleSignOut = async () => {
-    console.log("handle sign out");
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          toast.success("You logged out successfully!");
+
+          router.push("/login");
+        },
+      },
+    });
   };
 
   const isLoading = false;
@@ -46,7 +55,7 @@ const Navbar = () => {
     console.log("handle subscription portal");
   };
 
-  if (isPending || isLoading) {
+  if (loading || isLoading) {
     return <Skeleton className="w-full h-20" />;
   }
 
