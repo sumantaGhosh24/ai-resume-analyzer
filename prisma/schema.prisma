@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -6,6 +5,13 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum AnalysisStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
 }
 
 model User {
@@ -22,6 +28,10 @@ model User {
   accounts         Account[]
   twofactors       TwoFactor[]
   passkeys         Passkey[]
+
+  resumes  Resume[]
+  jobs     JobDescription[]
+  analyses Analysis[]
 
   @@unique([email])
   @@map("user")
@@ -105,4 +115,61 @@ model Passkey {
   @@index([userId])
   @@index([credentialID])
   @@map("passkey")
+}
+
+model Resume {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  fileUrl  String
+  fileName String?
+
+  parsedData Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  analyses Analysis[]
+}
+
+model JobDescription {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  content        String
+  structuredData Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  analyses Analysis[]
+}
+
+model Analysis {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id])
+
+  jobId String
+  job   JobDescription @relation(fields: [jobId], references: [id])
+
+  status AnalysisStatus @default(PENDING)
+
+  score               Float?
+  skillMatch          Float?
+  experienceMatch     Float?
+  projectMatch        Float?
+  responsibilityMatch Float?
+  seniorityMatch      Float?
+
+  missingSkills Json?
+  suggestions   Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
