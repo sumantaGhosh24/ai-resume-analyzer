@@ -10,6 +10,14 @@ const Dashboard = () => {
   const trpc = useTRPC();
   const {data} = useQuery(trpc.resumes.getResumes.queryOptions());
 
+  const testAi = useMutation(
+    trpc.resumes.testAi.mutationOptions({
+      onSuccess: () => {
+        toast.success("AI Job queued");
+      },
+    }),
+  );
+
   const create = useMutation(
     trpc.resumes.createResume.mutationOptions({
       onSuccess: () => {
@@ -22,6 +30,9 @@ const Dashboard = () => {
     <div className="min-h-screen min-w-screen flex items-center justify-center flex-col gap-y-6">
       Dashboard Page
       <div>{JSON.stringify(data, null, 2)}</div>
+      <Button disabled={testAi.isPending} onClick={() => testAi.mutate()}>
+        Test AI
+      </Button>
       <Button disabled={create.isPending} onClick={() => create.mutate()}>
         Create workflow
       </Button>
