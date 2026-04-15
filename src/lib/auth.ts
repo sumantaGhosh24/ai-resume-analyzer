@@ -4,12 +4,14 @@ import {nextCookies} from "better-auth/next-js";
 import {twoFactor} from "better-auth/plugins";
 import {passkey} from "@better-auth/passkey";
 import {createAuthMiddleware} from "better-auth/api";
+import {checkout, polar, portal, usage, webhooks} from "@polar-sh/better-auth";
 
 import prisma from "./db";
 import {sendPasswordResetEmail} from "./email/password-reset-email";
 import {sendEmailVerificationEmail} from "./email/email-verification";
 import {sendDeleteAccountVerificationEmail} from "./email/delete-account-verification";
 import {sendWelcomeEmail} from "./email/welcome-email";
+import {polarClient} from "./polar";
 
 export const auth = betterAuth({
   appName: "AI Resume Analyzer",
@@ -79,7 +81,42 @@ export const auth = betterAuth({
       maxAge: 60,
     },
   },
-  plugins: [nextCookies(), twoFactor(), passkey()],
+  plugins: [
+    nextCookies(),
+    twoFactor(),
+    passkey(),
+    polar({
+      client: polarClient,
+      createCustomerOnSignUp: true,
+      use: [
+        checkout({
+          products: [
+            {
+              productId: "a66a278d-458a-4c6c-a69d-d5f919bf8892",
+              slug: "basic",
+            },
+            {
+              productId: "6bf09996-9f03-4fbf-baaf-9e158c5a8acb",
+              slug: "pro",
+            },
+          ],
+          successUrl: `${process.env.POLAR_SUCCESS_URL}/dashboard`,
+          authenticatedUsersOnly: true,
+        }),
+        portal(),
+        usage(),
+        webhooks({
+          secret: process.env.POLAR_WEBHOOK_SECRET!,
+          onCustomerCreated: async (payload) => {
+            await polarClient.subscriptions.create({
+              customerId: payload.data.id,
+              productId: "a66a278d-458a-4c6c-a69d-d5f919bf8892",
+            });
+          },
+        }),
+      ],
+    }),
+  ],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (ctx.path.startsWith("/sign-up")) {

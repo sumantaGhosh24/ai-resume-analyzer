@@ -5,7 +5,7 @@ import {useRouter} from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import {toast} from "sonner";
-import {ChessKingIcon, MenuIcon, XIcon} from "lucide-react";
+import {MenuIcon, XIcon} from "lucide-react";
 
 import {guestLinks, userLinks} from "@/constants/landing";
 import {authClient} from "@/lib/auth-client";
@@ -44,18 +44,11 @@ const Navbar = () => {
     });
   };
 
-  const isLoading = false;
-  const hasActiveSubscription = false;
-
-  const handleSubscribe = async () => {
-    console.log("handle subscribe");
-  };
-
   const handleSubscriptionPortal = async () => {
-    console.log("handle subscription portal");
+    await authClient.customer.portal();
   };
 
-  if (loading || isLoading) {
+  if (loading) {
     return <Skeleton className="w-full h-20" />;
   }
 
@@ -100,29 +93,15 @@ const Navbar = () => {
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   ))}
-                  {hasActiveSubscription ? (
-                    <Button
-                      type="button"
-                      className={navigationMenuTriggerStyle({
-                        className: `bg-${primaryColor}-700 hover:bg-${primaryColor}-800 text-white`,
-                      })}
-                      onClick={handleSubscriptionPortal}
-                    >
-                      Subscriptions
-                    </Button>
-                  ) : (
-                    <Button
-                      type="button"
-                      className={navigationMenuTriggerStyle({
-                        className: `bg-${primaryColor}-700 hover:bg-${primaryColor}-800 text-white`,
-                      })}
-                      onClick={handleSubscribe}
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <ChessKingIcon /> Subscribe
-                      </span>
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    className={navigationMenuTriggerStyle({
+                      className: `bg-${primaryColor}-700 hover:bg-${primaryColor}-800 text-white`,
+                    })}
+                    onClick={handleSubscriptionPortal}
+                  >
+                    Subscriptions
+                  </Button>
                   <Button
                     variant="secondary"
                     className={navigationMenuTriggerStyle({

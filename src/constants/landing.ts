@@ -7,7 +7,6 @@ export const guestLinks = [
 export const userLinks = [
   {id: 1, name: "Dashboard", href: "/dashboard"},
   {id: 2, name: "Profile", href: "/profile"},
-  {id: 3, name: "Resumes", href: "/resumes"},
 ];
 
 export const features = [
@@ -63,18 +62,27 @@ export const testimonials = [
 export const pricing = [
   {
     name: "Free",
-    price: "$0",
-    features: ["3 Analyses", "Basic Scoring", "Limited Suggestions"],
+    price: "₹0",
+    features: [
+      "1 Mock Interview",
+      "1 Interview Questions",
+      "2 Cover Letter",
+      "2 Resume Rewrite",
+      "3 Ats Simulation",
+      "3 Resume Analyze",
+    ],
     duration: "Monthly",
   },
   {
     name: "Pro",
-    price: "$9/mo",
+    price: "₹300/mo",
     features: [
-      "Unlimited Analyses",
-      "Resume Rewriting",
-      "Cover Letters",
-      "Interview Questions",
+      "10 Mock Interview",
+      "10 Interview Questions",
+      "20 Cover Letter",
+      "20 Resume Rewrite",
+      "25 Ats Simulation",
+      "25 Resume Analyze",
     ],
     popular: true,
     duration: "Monthly",

@@ -4,6 +4,7 @@ import {
   twoFactorClient,
 } from "better-auth/client/plugins";
 import {passkeyClient} from "@better-auth/passkey/client";
+import {polarClient} from "@polar-sh/better-auth";
 
 import {auth} from "./auth";
 
@@ -16,5 +17,6 @@ export const authClient = createAuthClient({
         window.location.href = "/2fa";
       },
     }),
+    polarClient(),
   ],
 });
