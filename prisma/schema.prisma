@@ -120,45 +120,44 @@ model Passkey {
 model Resume {
   id     String @id @default(cuid())
   userId String
-  user   User   @relation(fields: [userId], references: [id])
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  fileUrl  String
-  fileName String?
-
+  fileUrl    String?
+  fileName   String?
   parsedData Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  analyses Analysis[]
+  analysis Analysis?
+
+  @@index([userId])
 }
 
 model JobDescription {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
+  id             String @id @default(cuid())
+  userId         String
+  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   content        String
   structuredData Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  analyses Analysis[]
+  analysis Analysis?
+
+  @@index([userId])
 }
 
 model Analysis {
-  id     String @id @default(cuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
-
-  resumeId String
-  resume   Resume @relation(fields: [resumeId], references: [id])
-
-  jobId String
-  job   JobDescription @relation(fields: [jobId], references: [id])
-
-  status AnalysisStatus @default(PENDING)
+  id       String         @id @default(cuid())
+  userId   String
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resumeId String         @unique
+  resume   Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+  jobId    String         @unique
+  job      JobDescription @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  status   AnalysisStatus @default(PENDING)
 
   score               Float?
   skillMatch          Float?
@@ -172,4 +171,9 @@ model Analysis {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([resumeId])
+  @@index([jobId])
+  @@index([status])
 }
