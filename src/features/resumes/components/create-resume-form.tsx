@@ -22,7 +22,7 @@ import {useCreateResume} from "../hooks/use-resumes";
 
 const createResumeSchema = z.object({
   resumeUrl: z.string(),
-  content: z.string().min(1).max(1000),
+  content: z.string().min(1).max(5000),
 });
 
 type CreateResumeFormType = z.infer<typeof createResumeSchema>;
@@ -56,7 +56,6 @@ const CreateResumeForm = () => {
     if (!files) return toast.error("Please select your resume first.");
 
     const imgRes = await startUpload(files);
-    console.log(imgRes);
     if (imgRes && imgRes[0].ufsUrl) {
       values.resumeUrl = imgRes[0].ufsUrl;
     }

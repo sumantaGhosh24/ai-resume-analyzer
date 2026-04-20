@@ -122,31 +122,127 @@ model Resume {
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  fileUrl    String?
-  fileName   String?
-  parsedData Json?
+  fileUrl  String?
+  fileName String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  skills      ResumeSkill[]
+  experiences ResumeExperience[]
+  projects    ResumeProject[]
+  education   ResumeEducation[]
 
   analysis Analysis?
 
   @@index([userId])
 }
 
+model ResumeSkill {
+  id       String @id @default(cuid())
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  name String
+
+  @@index([resumeId])
+  @@index([name])
+}
+
+model ResumeExperience {
+  id       String @id @default(cuid())
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  title   String
+  company String
+  years   Float?
+
+  bullets ResumeExperienceBullet[]
+
+  @@index([resumeId])
+}
+
+model ResumeExperienceBullet {
+  id           String           @id @default(cuid())
+  experienceId String
+  experience   ResumeExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  content String
+}
+
+model ResumeProject {
+  id       String @id @default(cuid())
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  name String
+
+  bullets ResumeProjectBullet[]
+
+  @@index([resumeId])
+}
+
+model ResumeProjectBullet {
+  id        String        @id @default(cuid())
+  projectId String
+  project   ResumeProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  content String
+}
+
+model ResumeEducation {
+  id       String @id @default(cuid())
+  resumeId String
+  resume   Resume @relation(fields: [resumeId], references: [id], onDelete: Cascade)
+
+  degree    String
+  institute String
+  year      String?
+}
+
 model JobDescription {
-  id             String @id @default(cuid())
-  userId         String
-  user           User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content        String
-  structuredData Json?
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  content   String
+  seniority String @default("junior")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  requiredSkills   JDRequiredSkill[]
+  preferredSkills  JDPreferredSkill[]
+  responsibilities JDResponsibility[]
+
   analysis Analysis?
 
   @@index([userId])
+}
+
+model JDRequiredSkill {
+  id    String         @id @default(cuid())
+  jobId String
+  job   JobDescription @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name String
+}
+
+model JDPreferredSkill {
+  id    String         @id @default(cuid())
+  jobId String
+  job   JobDescription @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  name String
+}
+
+model JDResponsibility {
+  id    String         @id @default(cuid())
+  jobId String
+  job   JobDescription @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  content String
 }
 
 model Analysis {
@@ -157,23 +253,149 @@ model Analysis {
   resume   Resume         @relation(fields: [resumeId], references: [id], onDelete: Cascade)
   jobId    String         @unique
   job      JobDescription @relation(fields: [jobId], references: [id], onDelete: Cascade)
-  status   AnalysisStatus @default(PENDING)
 
-  score               Float?
-  skillMatch          Float?
-  experienceMatch     Float?
-  projectMatch        Float?
-  responsibilityMatch Float?
-  seniorityMatch      Float?
-
-  missingSkills Json?
-  suggestions   Json?
+  status AnalysisStatus @default(PENDING)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  score AnalysisScore?
+
+  missingSkills MissingSkill[]
+  suggestions   Suggestion[]
+
+  ats         ATSResult?
+  coverLetter CoverLetter?
+  roadmap     Roadmap?
 
   @@index([userId])
   @@index([resumeId])
   @@index([jobId])
   @@index([status])
+}
+
+model AnalysisScore {
+  id         String   @id @default(cuid())
+  analysisId String   @unique
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  totalScore          Float
+  skillMatch          Float
+  projectMatch        Float
+  responsibilityMatch Float
+  seniorityMatch      Float
+}
+
+model MissingSkill {
+  id         String   @id @default(cuid())
+  analysisId String
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  name String
+
+  @@index([analysisId])
+}
+
+model Suggestion {
+  id         String   @id @default(cuid())
+  analysisId String
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  type    SuggestionType
+  content String
+}
+
+enum SuggestionType {
+  SUMMARY
+  SKILLS
+  EXPERIENCE
+  PROJECT
+}
+
+model ATSResult {
+  id         String   @id @default(cuid())
+  analysisId String   @unique
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  atsScore        Float
+  keywordMatch    Float
+  formattingScore Float
+  sectionScore    Float
+  passProbability Float
+
+  issues      ATSIssue[]
+  suggestions ATSSuggestion[]
+}
+
+model ATSSuggestion {
+  id    String    @id @default(cuid())
+  atsId String
+  ats   ATSResult @relation(fields: [atsId], references: [id], onDelete: Cascade)
+
+  content String
+
+  @@index([atsId])
+}
+
+model ATSIssue {
+  id    String    @id @default(cuid())
+  atsId String
+  ats   ATSResult @relation(fields: [atsId], references: [id], onDelete: Cascade)
+
+  content String
+}
+
+model CoverLetter {
+  id         String   @id @default(cuid())
+  analysisId String   @unique
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  title    String
+  greeting String
+  intro    String
+  closing  String
+
+  body CoverLetterParagraph[]
+}
+
+model CoverLetterParagraph {
+  id            String      @id @default(cuid())
+  coverLetterId String
+  coverLetter   CoverLetter @relation(fields: [coverLetterId], references: [id], onDelete: Cascade)
+
+  content String
+  order   Int
+
+  @@index([coverLetterId])
+}
+
+model Roadmap {
+  id         String   @id @default(cuid())
+  analysisId String   @unique
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  title    String
+  duration String
+
+  phases RoadmapPhase[]
+}
+
+model RoadmapPhase {
+  id        String  @id @default(cuid())
+  roadmapId String
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  title    String
+  duration String
+
+  tasks RoadmapTask[]
+}
+
+model RoadmapTask {
+  id      String       @id @default(cuid())
+  phaseId String
+  phase   RoadmapPhase @relation(fields: [phaseId], references: [id], onDelete: Cascade)
+
+  task     String
+  resource String?
 }

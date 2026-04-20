@@ -9,6 +9,7 @@ import {
   protectedProcedure,
 } from "@/trpc/init";
 import {PAGINATION} from "@/constants/pagination";
+import {inngest} from "@/inngest/client";
 
 export const resumesRouter = createTRPCRouter({
   create: premiumProcedure
@@ -35,7 +36,7 @@ export const resumesRouter = createTRPCRouter({
         },
       });
 
-      return prisma.analysis.create({
+      const analysis = await prisma.analysis.create({
         data: {
           userId: ctx.auth.user.id,
           resumeId: resume.id,
@@ -43,6 +44,19 @@ export const resumesRouter = createTRPCRouter({
           status: "PENDING",
         },
       });
+
+      await inngest.send({
+        name: "resume/uploaded",
+        data: {
+          fileUrl: input.resumeUrl,
+          resumeId: resume.id,
+          jdText: input.content,
+          jdId: jobDescription.id,
+          analyseId: analysis.id,
+        },
+      });
+
+      return resume;
     }),
   remove: protectedProcedure
     .input(z.object({id: z.string()}))
@@ -68,23 +82,33 @@ export const resumesRouter = createTRPCRouter({
       return prisma.resume.findUniqueOrThrow({
         where: {id: input.id, userId: ctx.auth.user.id},
         include: {
+          skills: true,
+          experiences: {
+            include: {
+              bullets: true,
+            },
+          },
+          projects: {
+            include: {
+              bullets: true,
+            },
+          },
+          education: true,
           analysis: {
             select: {
               id: true,
               status: true,
               score: true,
-              skillMatch: true,
-              experienceMatch: true,
-              projectMatch: true,
-              responsibilityMatch: true,
-              seniorityMatch: true,
               missingSkills: true,
               suggestions: true,
               job: {
                 select: {
                   id: true,
                   content: true,
-                  structuredData: true,
+                  seniority: true,
+                  requiredSkills: true,
+                  preferredSkills: true,
+                  responsibilities: true,
                 },
               },
             },
