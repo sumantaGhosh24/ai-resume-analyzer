@@ -29,6 +29,14 @@ export const useSuspenseATS = (resumeId: string) => {
   return useSuspenseQuery(trpc.resumes.getATS.queryOptions({resumeId}));
 };
 
+export const useSuspenseRewrittenResume = (resumeId: string) => {
+  const trpc = useTRPC();
+
+  return useSuspenseQuery(
+    trpc.resumes.getRewrittenResume.queryOptions({resumeId}),
+  );
+};
+
 export const useCreateResume = () => {
   const queryClient = useQueryClient();
 
@@ -60,6 +68,24 @@ export const useCreateATS = () => {
       },
       onError: (error) => {
         toast.error(`Failed to create ats: ${error.message}`);
+      },
+    }),
+  );
+};
+
+export const useCreateRewrittenResume = () => {
+  const queryClient = useQueryClient();
+
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.resumes.rewriteResume.mutationOptions({
+      onSuccess: () => {
+        toast.success("Resume rewritten started");
+        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
+      },
+      onError: (error) => {
+        toast.error(`Failed to create rewritten: ${error.message}`);
       },
     }),
   );

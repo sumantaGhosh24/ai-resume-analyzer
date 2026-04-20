@@ -2,7 +2,11 @@ import {Suspense} from "react";
 import {ErrorBoundary} from "react-error-boundary";
 
 import {requireAuth} from "@/lib/auth-utils";
-import {prefetchATS, prefetchResume} from "@/features/resumes/server/prefetch";
+import {
+  prefetchATS,
+  prefetchResume,
+  prefetchRewrittenResume,
+} from "@/features/resumes/server/prefetch";
 import {HydrateClient} from "@/trpc/server";
 import {
   Resume,
@@ -22,6 +26,8 @@ const ResumePage = async ({params}: PageProps<"/resume/[resumeId]">) => {
   prefetchResume(resumeId);
 
   prefetchATS(resumeId);
+
+  prefetchRewrittenResume(resumeId);
 
   return (
     <HydrateClient>

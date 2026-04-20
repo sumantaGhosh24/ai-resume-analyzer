@@ -264,9 +264,10 @@ model Analysis {
   missingSkills MissingSkill[]
   suggestions   Suggestion[]
 
-  ats         ATSResult?
-  coverLetter CoverLetter?
-  roadmap     Roadmap?
+  ats             ATSResult?
+  rewrittenResume RewrittenResume?
+  coverLetter     CoverLetter?
+  roadmap         Roadmap?
 
   @@index([userId])
   @@index([resumeId])
@@ -343,6 +344,63 @@ model ATSIssue {
   ats   ATSResult @relation(fields: [atsId], references: [id], onDelete: Cascade)
 
   content String
+}
+
+model RewrittenResume {
+  id         String   @id @default(cuid())
+  analysisId String   @unique
+  analysis   Analysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+
+  summary String
+
+  experiences RewrittenExperience[]
+  projects    RewrittenProject[]
+  skills      RewrittenSkill[]
+}
+
+model RewrittenExperience {
+  id                String           @id @default(cuid())
+  rewrittenResumeId String?
+  rewrittenResume   RewrittenResume? @relation(fields: [rewrittenResumeId], references: [id])
+
+  title   String
+  company String
+
+  bullets RewrittenExperienceBullet[]
+}
+
+model RewrittenExperienceBullet {
+  id                    String               @id @default(cuid())
+  rewrittenExperienceId String?
+  rewrittenExperience   RewrittenExperience? @relation(fields: [rewrittenExperienceId], references: [id])
+
+  content String
+}
+
+model RewrittenProject {
+  id                String           @id @default(cuid())
+  rewrittenResumeId String?
+  rewrittenResume   RewrittenResume? @relation(fields: [rewrittenResumeId], references: [id])
+
+  name String
+
+  bullets RewrittenProjectBullet[]
+}
+
+model RewrittenProjectBullet {
+  id                 String            @id @default(cuid())
+  rewrittenProjectId String?
+  rewrittenProject   RewrittenProject? @relation(fields: [rewrittenProjectId], references: [id])
+
+  content String
+}
+
+model RewrittenSkill {
+  id                String           @id @default(cuid())
+  rewrittenResumeId String?
+  rewrittenResume   RewrittenResume? @relation(fields: [rewrittenResumeId], references: [id])
+
+  name String
 }
 
 model CoverLetter {

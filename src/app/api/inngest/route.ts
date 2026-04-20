@@ -1,9 +1,9 @@
 import {serve} from "inngest/next";
 
 import {inngest} from "@/inngest/client";
-import {atsSimulation, processResume} from "@/inngest/functions";
+import {atsSimulation, processResume, rewriteResume} from "@/inngest/functions";
 
 export const {GET, POST, PUT} = serve({
   client: inngest,
-  functions: [processResume, atsSimulation],
+  functions: [processResume, atsSimulation, rewriteResume],
 });

@@ -32,9 +32,15 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {ScrollArea} from "@/components/ui/scroll-area";
 
-import {useSuspenseATS, useSuspenseResume} from "../hooks/use-resumes";
+import {
+  useSuspenseATS,
+  useSuspenseResume,
+  useSuspenseRewrittenResume,
+} from "../hooks/use-resumes";
 import ATSResults from "./ats-results";
 import CreateATSForm from "./creae-ats";
+import RewrittenResume from "./rewritten-resume";
+import CreateRewrittenResume from "./create-rewritten-resume";
 
 export const ResumeLoading = () => {
   return <LoadingView message="Loading resume..." />;
@@ -48,7 +54,7 @@ export const ResumeEmpty = () => {
   return <EmptyView message="No resume found" />;
 };
 
-const PrimaryBadge = ({children}: {children: ReactNode}) => {
+export const PrimaryBadge = ({children}: {children: ReactNode}) => {
   const {primaryColor} = usePrimaryColor();
 
   return (
@@ -62,6 +68,8 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
   const {data: resume} = useSuspenseResume(resumeId);
 
   const {data: ats} = useSuspenseATS(resumeId);
+
+  const {data: rewritten} = useSuspenseRewrittenResume(resumeId);
 
   const {primaryColor} = usePrimaryColor();
 
@@ -179,7 +187,7 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
               <TabsContent value="experiences">
                 {resume.experiences.length > 0 ? (
                   <ScrollArea className="h-[300px]">
-                    <ul className="space-y-6 pt-4">
+                    <ul className="space-y-6">
                       {resume.experiences.map((exp) => (
                         <li
                           key={exp.id}
@@ -222,7 +230,7 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
               <TabsContent value="projects">
                 {resume.projects && resume.projects.length > 0 ? (
                   <ScrollArea className="h-[300px]">
-                    <ul className="space-y-4 pt-4">
+                    <ul className="space-y-4">
                       {resume.projects.map((project) => (
                         <li
                           key={project.id}
@@ -254,7 +262,7 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
               </TabsContent>
               <TabsContent value="educations">
                 {resume.education.length > 0 ? (
-                  <ul className="space-y-4 pt-4">
+                  <ul className="space-y-4">
                     {resume.education.map((edu) => (
                       <li
                         key={edu.id}
@@ -647,6 +655,15 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
         <ATSResults ats={ats} />
       ) : (
         <CreateATSForm
+          resumeId={resume.id}
+          jdId={resume?.analysis?.job?.id as string}
+          analyseId={resume?.analysis?.id as string}
+        />
+      )}
+      {rewritten ? (
+        <RewrittenResume rewritten={rewritten} />
+      ) : (
+        <CreateRewrittenResume
           resumeId={resume.id}
           jdId={resume?.analysis?.job?.id as string}
           analyseId={resume?.analysis?.id as string}
