@@ -1,5 +1,6 @@
 "use client";
 
+import {useState} from "react";
 import {SendIcon} from "lucide-react";
 
 import {useUpgradeModal} from "@/hooks/use-upgrade-modal";
@@ -18,6 +19,8 @@ interface CreateATSFormProps {
 }
 
 const CreateATSForm = ({resumeId, jdId, analyseId}: CreateATSFormProps) => {
+  const [pending, setPending] = useState(false);
+
   const createATS = useCreateATS();
 
   const {handleError, modal} = useUpgradeModal();
@@ -29,6 +32,8 @@ const CreateATSForm = ({resumeId, jdId, analyseId}: CreateATSFormProps) => {
   const {primaryColor} = usePrimaryColor();
 
   const handleCreateATS = async () => {
+    setPending(true);
+
     createATS.mutate(
       {
         resumeId,
@@ -55,6 +60,7 @@ const CreateATSForm = ({resumeId, jdId, analyseId}: CreateATSFormProps) => {
             type="button"
             disabled={
               createATS.isPending ||
+              pending ||
               !hasAccess("ats_simulation") ||
               Number(uses?.used) >= Number(uses?.total)
             }

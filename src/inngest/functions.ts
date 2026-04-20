@@ -258,6 +258,15 @@ export const atsSimulation = inngest.createFunction(
     const {resumeId, jdId, analyseId} = event.data;
 
     const {resumeText, jd} = await step.run("fetch-data", async () => {
+      const existingAtsResult = await prisma.aTSResult.findUnique({
+        where: {analysisId: analyseId},
+      });
+      if (existingAtsResult) {
+        throw new Error(
+          "ATS result already exists for this analysis, aborting job.",
+        );
+      }
+
       const resumeRecord = await prisma.resume.findUnique({
         where: {id: resumeId},
       });
@@ -300,6 +309,15 @@ export const atsSimulation = inngest.createFunction(
     });
 
     const atsResult = await step.run("run-ats", async () => {
+      const existingAtsResult = await prisma.aTSResult.findUnique({
+        where: {analysisId: analyseId},
+      });
+      if (existingAtsResult) {
+        throw new Error(
+          "ATS result already exists for this analysis, aborting job.",
+        );
+      }
+
       return await runATSSimulation({
         resumeText: resumeText,
         jd,
@@ -307,6 +325,15 @@ export const atsSimulation = inngest.createFunction(
     });
 
     await step.run("save-ats-result", async () => {
+      const existingAtsResult = await prisma.aTSResult.findUnique({
+        where: {analysisId: analyseId},
+      });
+      if (existingAtsResult) {
+        throw new Error(
+          "ATS result already exists for this analysis, aborting job.",
+        );
+      }
+
       const ats = await prisma.aTSResult.create({
         data: {
           analysisId: analyseId,
