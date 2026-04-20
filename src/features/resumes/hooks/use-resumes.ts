@@ -19,7 +19,14 @@ export const useSuspenseResumes = () => {
 
 export const useSuspenseResume = (id: string) => {
   const trpc = useTRPC();
+
   return useSuspenseQuery(trpc.resumes.getOne.queryOptions({id}));
+};
+
+export const useSuspenseATS = (resumeId: string) => {
+  const trpc = useTRPC();
+
+  return useSuspenseQuery(trpc.resumes.getATS.queryOptions({resumeId}));
 };
 
 export const useCreateResume = () => {
@@ -35,6 +42,24 @@ export const useCreateResume = () => {
       },
       onError: (error) => {
         toast.error(`Failed to create resume: ${error.message}`);
+      },
+    }),
+  );
+};
+
+export const useCreateATS = () => {
+  const queryClient = useQueryClient();
+
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.resumes.createATS.mutationOptions({
+      onSuccess: () => {
+        toast.success("Resume ats simulation started");
+        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
+      },
+      onError: (error) => {
+        toast.error(`Failed to create ats: ${error.message}`);
       },
     }),
   );

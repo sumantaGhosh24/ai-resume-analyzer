@@ -32,7 +32,9 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {ScrollArea} from "@/components/ui/scroll-area";
 
-import {useSuspenseResume} from "../hooks/use-resumes";
+import {useSuspenseATS, useSuspenseResume} from "../hooks/use-resumes";
+import ATSResults from "./ats-results";
+import CreateATSForm from "./creae-ats";
 
 export const ResumeLoading = () => {
   return <LoadingView message="Loading resume..." />;
@@ -58,6 +60,8 @@ const PrimaryBadge = ({children}: {children: ReactNode}) => {
 
 export const Resume = ({resumeId}: {resumeId: string}) => {
   const {data: resume} = useSuspenseResume(resumeId);
+
+  const {data: ats} = useSuspenseATS(resumeId);
 
   const {primaryColor} = usePrimaryColor();
 
@@ -639,6 +643,15 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
           </Tabs>
         </CardContent>
       </Card>
+      {ats ? (
+        <ATSResults ats={ats} />
+      ) : (
+        <CreateATSForm
+          resumeId={resume.id}
+          jdId={resume?.analysis?.job?.id as string}
+          analyseId={resume?.analysis?.id as string}
+        />
+      )}
     </div>
   );
 };

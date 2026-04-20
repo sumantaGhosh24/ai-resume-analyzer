@@ -58,6 +58,30 @@ export const resumesRouter = createTRPCRouter({
 
       return resume;
     }),
+  createATS: premiumProcedure
+    .input(
+      z.object({resumeId: z.string(), jdId: z.string(), analyseId: z.string()}),
+    )
+    .mutation(async ({input, ctx}) => {
+      await useMeter({
+        customerId: ctx.customer.id,
+        externalCustomerId: ctx.auth.user.id,
+        meterName: "ats_simulation",
+      });
+
+      const {resumeId, jdId, analyseId} = input;
+
+      await inngest.send({
+        name: "analysis/ats",
+        data: {
+          resumeId,
+          jdId,
+          analyseId,
+        },
+      });
+
+      return resumeId;
+    }),
   remove: protectedProcedure
     .input(z.object({id: z.string()}))
     .mutation(({ctx, input}) => {
@@ -113,6 +137,25 @@ export const resumesRouter = createTRPCRouter({
               },
             },
           },
+        },
+      });
+    }),
+  getATS: protectedProcedure
+    .input(z.object({resumeId: z.string()}))
+    .query(async ({ctx, input}) => {
+      const analysis = await prisma.analysis.findFirstOrThrow({
+        where: {
+          resumeId: input.resumeId,
+          userId: ctx.auth.user.id,
+        },
+        select: {id: true},
+      });
+
+      return prisma.aTSResult.findFirst({
+        where: {analysisId: analysis.id},
+        include: {
+          suggestions: true,
+          issues: true,
         },
       });
     }),
