@@ -34,6 +34,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 
 import {
   useSuspenseATS,
+  useSuspenseCoverLetter,
   useSuspenseResume,
   useSuspenseRewrittenResume,
 } from "../hooks/use-resumes";
@@ -41,6 +42,8 @@ import ATSResults from "./ats-results";
 import CreateATSForm from "./creae-ats";
 import RewrittenResume from "./rewritten-resume";
 import CreateRewrittenResume from "./create-rewritten-resume";
+import CoverLetter from "./cover-letter";
+import CreateCoverLetter from "./create-cover-letter";
 
 export const ResumeLoading = () => {
   return <LoadingView message="Loading resume..." />;
@@ -70,6 +73,8 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
   const {data: ats} = useSuspenseATS(resumeId);
 
   const {data: rewritten} = useSuspenseRewrittenResume(resumeId);
+
+  const {data: coverLetter} = useSuspenseCoverLetter(resumeId);
 
   const {primaryColor} = usePrimaryColor();
 
@@ -664,6 +669,15 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
         <RewrittenResume rewritten={rewritten} />
       ) : (
         <CreateRewrittenResume
+          resumeId={resume.id}
+          jdId={resume?.analysis?.job?.id as string}
+          analyseId={resume?.analysis?.id as string}
+        />
+      )}
+      {coverLetter ? (
+        <CoverLetter coverLetter={coverLetter} />
+      ) : (
+        <CreateCoverLetter
           resumeId={resume.id}
           jdId={resume?.analysis?.job?.id as string}
           analyseId={resume?.analysis?.id as string}

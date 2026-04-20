@@ -37,6 +37,12 @@ export const useSuspenseRewrittenResume = (resumeId: string) => {
   );
 };
 
+export const useSuspenseCoverLetter = (resumeId: string) => {
+  const trpc = useTRPC();
+
+  return useSuspenseQuery(trpc.resumes.getCoverLetter.queryOptions({resumeId}));
+};
+
 export const useCreateResume = () => {
   const queryClient = useQueryClient();
 
@@ -86,6 +92,24 @@ export const useCreateRewrittenResume = () => {
       },
       onError: (error) => {
         toast.error(`Failed to create rewritten: ${error.message}`);
+      },
+    }),
+  );
+};
+
+export const useCreateCoverLetter = () => {
+  const queryClient = useQueryClient();
+
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.resumes.createCoverLetter.mutationOptions({
+      onSuccess: () => {
+        toast.success("Create cover letter started");
+        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
+      },
+      onError: (error) => {
+        toast.error(`Failed to create cover letter: ${error.message}`);
       },
     }),
   );

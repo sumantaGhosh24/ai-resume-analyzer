@@ -106,6 +106,30 @@ export const resumesRouter = createTRPCRouter({
 
       return resumeId;
     }),
+  createCoverLetter: premiumProcedure
+    .input(
+      z.object({resumeId: z.string(), jdId: z.string(), analyseId: z.string()}),
+    )
+    .mutation(async ({input, ctx}) => {
+      await useMeter({
+        customerId: ctx.customer.id,
+        externalCustomerId: ctx.auth.user.id,
+        meterName: "cover_letter",
+      });
+
+      const {resumeId, jdId, analyseId} = input;
+
+      await inngest.send({
+        name: "resume/cover-letter",
+        data: {
+          resumeId,
+          jdId,
+          analyseId,
+        },
+      });
+
+      return resumeId;
+    }),
   remove: protectedProcedure
     .input(z.object({id: z.string()}))
     .mutation(({ctx, input}) => {
@@ -203,6 +227,25 @@ export const resumesRouter = createTRPCRouter({
       });
 
       return analysis.rewrittenResume ?? null;
+    }),
+  getCoverLetter: protectedProcedure
+    .input(z.object({resumeId: z.string()}))
+    .query(async ({ctx, input}) => {
+      const analysis = await prisma.analysis.findUniqueOrThrow({
+        where: {
+          resumeId: input.resumeId,
+          userId: ctx.auth.user.id,
+        },
+        include: {
+          coverLetter: {
+            include: {
+              body: true,
+            },
+          },
+        },
+      });
+
+      return analysis.coverLetter ?? null;
     }),
   getMany: protectedProcedure
     .input(

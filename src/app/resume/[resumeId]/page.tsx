@@ -4,6 +4,7 @@ import {ErrorBoundary} from "react-error-boundary";
 import {requireAuth} from "@/lib/auth-utils";
 import {
   prefetchATS,
+  prefetchCoverLetter,
   prefetchResume,
   prefetchRewrittenResume,
 } from "@/features/resumes/server/prefetch";
@@ -28,6 +29,8 @@ const ResumePage = async ({params}: PageProps<"/resume/[resumeId]">) => {
   prefetchATS(resumeId);
 
   prefetchRewrittenResume(resumeId);
+
+  prefetchCoverLetter(resumeId);
 
   return (
     <HydrateClient>

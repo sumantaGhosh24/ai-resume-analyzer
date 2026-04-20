@@ -19,3 +19,7 @@ export const prefetchATS = (resumeId: string) => {
 export const prefetchRewrittenResume = (resumeId: string) => {
   return prefetch(trpc.resumes.getRewrittenResume.queryOptions({resumeId}));
 };
+
+export const prefetchCoverLetter = (resumeId: string) => {
+  return prefetch(trpc.resumes.getCoverLetter.queryOptions({resumeId}));
+};
