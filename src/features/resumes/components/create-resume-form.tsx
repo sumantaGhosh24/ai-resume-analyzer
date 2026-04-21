@@ -104,32 +104,19 @@ const CreateResumeForm = () => {
             Analyze my resume
           </h2>
           <FieldGroup className="flex flex-col gap-6">
-            <Controller
-              control={form.control}
-              name="resumeUrl"
-              render={({field, fieldState}) => (
-                <Field
-                  data-invalid={fieldState.invalid}
-                  className={`border-2 border-dashed border-accent/60 bg-muted/40 hover:bg-muted/60 dark:bg-[#18181b] dark:border-gray-700 dark:hover:bg-[#232329] transition shadow-inner h-40 w-full rounded-xl grid place-items-center relative overflow-hidden`}
-                >
-                  <FieldLabel
-                    htmlFor={field.name}
-                    className="flex flex-col items-center justify-center h-full w-full cursor-pointer gap-2"
+            <div className="flex items-center justify-between flex-col md:flex-row gap-5">
+              <Controller
+                control={form.control}
+                name="resumeUrl"
+                render={({field, fieldState}) => (
+                  <Field
+                    data-invalid={fieldState.invalid}
+                    className="border-2 border-dashed border-accent/60 bg-muted/40 hover:bg-muted/60 dark:bg-[#18181b] dark:border-gray-700 dark:hover:bg-[#232329] transition shadow-inner h-[400px] w-full md:w-1/2 rounded-xl grid place-items-center relative overflow-hidden"
                   >
-                    {files.length > 0 ? (
-                      <div className="w-full h-full flex flex-col justify-center items-center gap-2">
-                        <embed
-                          src={URL.createObjectURL(files[0])}
-                          type="application/pdf"
-                          width="100%"
-                          height="100%"
-                          className="rounded-lg border bg-background dark:bg-[#222226] shadow-md transition-all w-full h-full"
-                        />
-                        <span className="text-xs text-muted-foreground truncate dark:text-gray-400">
-                          Resume Preview
-                        </span>
-                      </div>
-                    ) : (
+                    <FieldLabel
+                      htmlFor={field.name}
+                      className="flex flex-col items-center justify-center h-full w-full cursor-pointer gap-2"
+                    >
                       <div className="flex flex-col items-center gap-2 text-black">
                         <UploadIcon size={38} className="dark:text-gray-400" />
                         <span className="text-sm font-medium text-muted-foreground dark:text-gray-300">
@@ -139,25 +126,45 @@ const CreateResumeForm = () => {
                           PDF, max 5MB
                         </span>
                       </div>
+                    </FieldLabel>
+                    <Input
+                      type="file"
+                      accept="application/pdf"
+                      placeholder="Upload your resume"
+                      onChange={(e) => handleImage(e, field.onChange)}
+                      id={field.name}
+                      aria-invalid={fieldState.invalid}
+                      className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                    />
+                    {fieldState.invalid && (
+                      <div className="absolute bottom-2 w-full flex justify-center">
+                        <FieldError errors={[fieldState.error]} />
+                      </div>
                     )}
-                  </FieldLabel>
-                  <Input
-                    type="file"
-                    accept="application/pdf"
-                    placeholder="Upload your resume"
-                    onChange={(e) => handleImage(e, field.onChange)}
-                    id={field.name}
-                    aria-invalid={fieldState.invalid}
-                    className="absolute inset-0 opacity-0 cursor-pointer w-full h-full"
+                  </Field>
+                )}
+              />
+              {files.length > 0 ? (
+                <div className="w-full md:w-1/2 h-[400px] flex flex-col justify-center items-center gap-2">
+                  <embed
+                    src={URL.createObjectURL(files[0])}
+                    type="application/pdf"
+                    width="100%"
+                    height="100%"
+                    className="rounded-lg border bg-background dark:bg-[#222226] shadow-md transition-all w-full h-full"
                   />
-                  {fieldState.invalid && (
-                    <div className="absolute bottom-2 w-full flex justify-center">
-                      <FieldError errors={[fieldState.error]} />
-                    </div>
-                  )}
-                </Field>
+                  <span className="text-xs text-muted-foreground truncate dark:text-gray-400">
+                    Resume Preview
+                  </span>
+                </div>
+              ) : (
+                <div className="rounded-lg border-2 border-dashed border-accent/60 bg-muted/40 hover:bg-muted/60 dark:bg-[#18181b] dark:border-gray-700 dark:hover:bg-[#232329] transition shadow-inner hidden h-[400px] w-1/2 md:flex items-center justify-center">
+                  <span className="text-xs text-muted-foreground truncate dark:text-gray-400">
+                    Select a pdf to preview
+                  </span>
+                </div>
               )}
-            />
+            </div>
             <Controller
               control={form.control}
               name="content"

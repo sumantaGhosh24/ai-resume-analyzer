@@ -11,7 +11,6 @@ export const EmailVerification = ({email}: {email: string}) => {
   const interval = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/immutability
     startEmailVerificationCountdown();
   }, []);
 

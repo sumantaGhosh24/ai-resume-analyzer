@@ -17,38 +17,6 @@ export const useSuspenseResumes = () => {
   return useSuspenseQuery(trpc.resumes.getMany.queryOptions(params));
 };
 
-export const useSuspenseResume = (id: string) => {
-  const trpc = useTRPC();
-
-  return useSuspenseQuery(trpc.resumes.getOne.queryOptions({id}));
-};
-
-export const useSuspenseATS = (resumeId: string) => {
-  const trpc = useTRPC();
-
-  return useSuspenseQuery(trpc.resumes.getATS.queryOptions({resumeId}));
-};
-
-export const useSuspenseRewrittenResume = (resumeId: string) => {
-  const trpc = useTRPC();
-
-  return useSuspenseQuery(
-    trpc.resumes.getRewrittenResume.queryOptions({resumeId}),
-  );
-};
-
-export const useSuspenseCoverLetter = (resumeId: string) => {
-  const trpc = useTRPC();
-
-  return useSuspenseQuery(trpc.resumes.getCoverLetter.queryOptions({resumeId}));
-};
-
-export const useSuspenseRoadmap = (resumeId: string) => {
-  const trpc = useTRPC();
-
-  return useSuspenseQuery(trpc.resumes.getRoadmap.queryOptions({resumeId}));
-};
-
 export const useCreateResume = () => {
   const queryClient = useQueryClient();
 
@@ -67,78 +35,6 @@ export const useCreateResume = () => {
   );
 };
 
-export const useCreateATS = () => {
-  const queryClient = useQueryClient();
-
-  const trpc = useTRPC();
-
-  return useMutation(
-    trpc.resumes.createATS.mutationOptions({
-      onSuccess: () => {
-        toast.success("Resume ats simulation started");
-        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
-      },
-      onError: (error) => {
-        toast.error(`Failed to create ats: ${error.message}`);
-      },
-    }),
-  );
-};
-
-export const useCreateRewrittenResume = () => {
-  const queryClient = useQueryClient();
-
-  const trpc = useTRPC();
-
-  return useMutation(
-    trpc.resumes.rewriteResume.mutationOptions({
-      onSuccess: () => {
-        toast.success("Resume rewritten started");
-        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
-      },
-      onError: (error) => {
-        toast.error(`Failed to create rewritten: ${error.message}`);
-      },
-    }),
-  );
-};
-
-export const useCreateCoverLetter = () => {
-  const queryClient = useQueryClient();
-
-  const trpc = useTRPC();
-
-  return useMutation(
-    trpc.resumes.createCoverLetter.mutationOptions({
-      onSuccess: () => {
-        toast.success("Create cover letter started");
-        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
-      },
-      onError: (error) => {
-        toast.error(`Failed to create cover letter: ${error.message}`);
-      },
-    }),
-  );
-};
-
-export const useCreateRoadmap = () => {
-  const queryClient = useQueryClient();
-
-  const trpc = useTRPC();
-
-  return useMutation(
-    trpc.resumes.createRoadmap.mutationOptions({
-      onSuccess: () => {
-        toast.success("Create roadmap started");
-        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
-      },
-      onError: (error) => {
-        toast.error(`Failed to create roadmap: ${error.message}`);
-      },
-    }),
-  );
-};
-
 export const useUpdateResumeName = () => {
   const queryClient = useQueryClient();
 
@@ -150,7 +46,7 @@ export const useUpdateResumeName = () => {
         toast.success(`Resume "${data.fileName}" updated`);
         queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
         queryClient.invalidateQueries(
-          trpc.resumes.getOne.queryOptions({id: data.id}),
+          trpc.resume.getOne.queryOptions({id: data.id}),
         );
       },
       onError: (error) => {
@@ -171,7 +67,7 @@ export const useRemoveResume = () => {
         toast.success(`Resume "${data.fileName}" removed`);
         queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
         queryClient.invalidateQueries(
-          trpc.resumes.getOne.queryFilter({id: data.id}),
+          trpc.resume.getOne.queryFilter({id: data.id}),
         );
       },
     }),

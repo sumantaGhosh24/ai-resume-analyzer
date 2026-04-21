@@ -2,19 +2,15 @@ import {Suspense} from "react";
 import {ErrorBoundary} from "react-error-boundary";
 
 import {requireAuth} from "@/lib/auth-utils";
-import {
-  prefetchATS,
-  prefetchCoverLetter,
-  prefetchResume,
-  prefetchRewrittenResume,
-  prefetchRoadmap,
-} from "@/features/resumes/server/prefetch";
 import {HydrateClient} from "@/trpc/server";
-import {
-  Resume,
-  ResumeError,
-  ResumeLoading,
-} from "@/features/resumes/components/resume";
+import {prefetchResume} from "@/features/resume/server/prefetch";
+import {prefetchATS} from "@/features/ats/server/prefetch";
+import {prefetchRewrittenResume} from "@/features/rewrite/server/prefetch";
+import {prefetchCoverLetter} from "@/features/cover-letter/server/prefetch";
+import {prefetchRoadmap} from "@/features/roadmap/server/prefetch";
+import ResumeError from "@/features/resume/components/resume-error";
+import ResumeLoading from "@/features/resume/components/resume-loading";
+import Resume from "@/features/resume/components/resume";
 
 export const metadata = {
   title: "Resume",

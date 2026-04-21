@@ -10,7 +10,7 @@ import {LoadingSwap} from "@/components/loading-swap";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
-import {useCreateATS} from "../hooks/use-resumes";
+import {useCreateATS} from "../hooks/use-ats";
 
 interface CreateATSFormProps {
   resumeId: string;

@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
 
+import {usePrimaryColor} from "@/components/primary-provider";
 import {Button} from "@/components/ui/button";
 import {
   Empty,
@@ -10,6 +13,8 @@ import {
 } from "@/components/ui/empty";
 
 export default function NotFound() {
+  const {primaryColor} = usePrimaryColor();
+
   return (
     <div className="h-screen w-full flex items-center justify-center">
       <div className="bg-background w-[80%] h-125 rounded-md shadow-md flex flex-col items-center justify-center gap-5 dark:shadow-white/40">
@@ -24,7 +29,10 @@ export default function NotFound() {
             </EmptyDescription>
           </EmptyHeader>
           <EmptyContent>
-            <Button asChild>
+            <Button
+              asChild
+              className={`bg-${primaryColor}-700 hover:bg-${primaryColor}-800 text-white`}
+            >
               <Link href="/">Back to Home</Link>
             </Button>
           </EmptyContent>

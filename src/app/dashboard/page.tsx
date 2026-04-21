@@ -5,12 +5,10 @@ import {requireAuth} from "@/lib/auth-utils";
 import {prefetchResumes} from "@/features/resumes/server/prefetch";
 import {resumesParamsLoader} from "@/features/resumes/server/params-loader";
 import {HydrateClient} from "@/trpc/server";
-import {
-  ResumesContainer,
-  ResumesError,
-  ResumesList,
-  ResumesLoading,
-} from "@/features/resumes/components/resumes";
+import ResumesContainer from "@/features/resumes/components/resumes-container";
+import ResumesError from "@/features/resumes/components/resumes-error";
+import ResumesLoading from "@/features/resumes/components/resumes-loading";
+import ResumesList from "@/features/resumes/components/resumes-list";
 
 export const metadata = {
   title: "Dashboard",

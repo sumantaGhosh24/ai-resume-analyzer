@@ -1,7 +1,8 @@
 import type {Metadata} from "next";
-import {Geist, Geist_Mono} from "next/font/google";
+import {Geist, Geist_Mono, Inter} from "next/font/google";
 import {NuqsAdapter} from "nuqs/adapters/next/app";
 
+import {cn} from "@/lib/utils";
 import Navbar from "@/components/navbar";
 import {ThemeProvider} from "@/components/theme-provider";
 import PrimaryColorProvider from "@/components/primary-provider";
@@ -9,6 +10,8 @@ import {Toaster} from "@/components/ui/sonner";
 import {TRPCReactProvider} from "@/trpc/client";
 
 import "./globals.css";
+
+const inter = Inter({subsets: ["latin"], variable: "--font-sans"});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,7 +39,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background text-foreground antialiased`}
+        className={cn(
+          geistSans.variable,
+          geistMono.variable,
+          inter.variable,
+          "min-h-screen bg-background text-foreground antialiased",
+        )}
       >
         <ThemeProvider
           attribute="class"

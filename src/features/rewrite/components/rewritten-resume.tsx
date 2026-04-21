@@ -1,5 +1,6 @@
 "use client";
 
+import {PrimaryBadge} from "@/components/primary-badge";
 import {Card, CardHeader, CardTitle, CardContent} from "@/components/ui/card";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {ScrollArea} from "@/components/ui/scroll-area";
@@ -7,8 +8,6 @@ import {
   RewrittenResume as RewrittenTypes,
   RewrittenSkill,
 } from "@/generated/prisma/client";
-
-import {PrimaryBadge} from "./resume";
 
 interface RewrittenResumeProps extends RewrittenTypes {
   experiences: {

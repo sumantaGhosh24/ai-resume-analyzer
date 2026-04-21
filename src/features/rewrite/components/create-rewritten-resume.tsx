@@ -10,7 +10,7 @@ import {LoadingSwap} from "@/components/loading-swap";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
-import {useCreateRewrittenResume} from "../hooks/use-resumes";
+import {useCreateRewrittenResume} from "../hooks/use-rewritten";
 
 interface CreateRewrittenResumeProps {
   resumeId: string;

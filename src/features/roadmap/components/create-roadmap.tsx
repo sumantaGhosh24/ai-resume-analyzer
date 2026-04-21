@@ -10,35 +10,31 @@ import {LoadingSwap} from "@/components/loading-swap";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Button} from "@/components/ui/button";
 
-import {useCreateCoverLetter} from "../hooks/use-resumes";
+import {useCreateRoadmap} from "../hooks/use-roadmap";
 
-interface CreateCoverLetterProps {
+interface CreateRoadmapProps {
   resumeId: string;
   jdId: string;
   analyseId: string;
 }
 
-const CreateCoverLetter = ({
-  resumeId,
-  jdId,
-  analyseId,
-}: CreateCoverLetterProps) => {
+const CreateRoadmap = ({resumeId, jdId, analyseId}: CreateRoadmapProps) => {
   const [pending, setPending] = useState(false);
 
-  const createCoverLetter = useCreateCoverLetter();
+  const createRoadmap = useCreateRoadmap();
 
   const {handleError, modal} = useUpgradeModal();
 
   const {getUsage, hasAccess} = useSubscriptionState();
 
-  const uses = getUsage("cover_letter");
+  const uses = getUsage("roadmap_generator");
 
   const {primaryColor} = usePrimaryColor();
 
-  const handleCreateCoverLetter = async () => {
+  const handleCreateRoadmap = async () => {
     setPending(true);
 
-    createCoverLetter.mutate(
+    createRoadmap.mutate(
       {
         resumeId,
         jdId,
@@ -57,26 +53,26 @@ const CreateCoverLetter = ({
       {modal}
       <Card className="overflow-hidden flex flex-col h-full">
         <CardHeader>
-          <CardTitle>Create Cover Letter</CardTitle>
+          <CardTitle>Create Roadmap</CardTitle>
         </CardHeader>
         <CardContent className="flex-1 overflow-auto whitespace-pre-line leading-relaxed space-y-3 text-sm text-foreground/90">
           <Button
             type="button"
             disabled={
-              createCoverLetter.isPending ||
+              createRoadmap.isPending ||
               pending ||
-              !hasAccess("cover_letter") ||
+              !hasAccess("roadmap_generator") ||
               Number(uses?.used) >= Number(uses?.total)
             }
             size="lg"
             className={`w-full bg-${primaryColor}-700 hover:bg-${primaryColor}-800 text-white`}
-            onClick={handleCreateCoverLetter}
+            onClick={handleCreateRoadmap}
           >
             <LoadingSwap
-              isLoading={createCoverLetter.isPending}
+              isLoading={createRoadmap.isPending}
               className="flex items-center"
             >
-              <SendIcon className="mr-2" /> Create Cover Letter
+              <SendIcon className="mr-2" /> Create Roadmap
               <span className="text-xs opacity-80 ml-2">
                 {" "}
                 ({uses?.used}/{uses?.total})
@@ -89,4 +85,4 @@ const CreateCoverLetter = ({
   );
 };
 
-export default CreateCoverLetter;
+export default CreateRoadmap;
