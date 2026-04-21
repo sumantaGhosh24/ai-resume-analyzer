@@ -36,8 +36,8 @@ export const features = [
     img: "/landing/skills.png",
   },
   {
-    title: "Interview Questions",
-    desc: "Prepare with AI-generated questions.",
+    title: "Roadmap Generator",
+    desc: "Generate roadmap for interview.",
     img: "/landing/ai.png",
   },
 ];
@@ -64,8 +64,7 @@ export const pricing = [
     name: "Free",
     price: "₹0",
     features: [
-      "1 Mock Interview",
-      "1 Interview Questions",
+      "1 Generate Roadmap",
       "2 Cover Letter",
       "2 Resume Rewrite",
       "3 Ats Simulation",
@@ -77,8 +76,7 @@ export const pricing = [
     name: "Pro",
     price: "₹300/mo",
     features: [
-      "10 Mock Interview",
-      "10 Interview Questions",
+      "10 Generate Roadmap",
       "20 Cover Letter",
       "20 Resume Rewrite",
       "25 Ats Simulation",

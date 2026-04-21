@@ -43,6 +43,12 @@ export const useSuspenseCoverLetter = (resumeId: string) => {
   return useSuspenseQuery(trpc.resumes.getCoverLetter.queryOptions({resumeId}));
 };
 
+export const useSuspenseRoadmap = (resumeId: string) => {
+  const trpc = useTRPC();
+
+  return useSuspenseQuery(trpc.resumes.getRoadmap.queryOptions({resumeId}));
+};
+
 export const useCreateResume = () => {
   const queryClient = useQueryClient();
 
@@ -110,6 +116,24 @@ export const useCreateCoverLetter = () => {
       },
       onError: (error) => {
         toast.error(`Failed to create cover letter: ${error.message}`);
+      },
+    }),
+  );
+};
+
+export const useCreateRoadmap = () => {
+  const queryClient = useQueryClient();
+
+  const trpc = useTRPC();
+
+  return useMutation(
+    trpc.resumes.createRoadmap.mutationOptions({
+      onSuccess: () => {
+        toast.success("Create roadmap started");
+        queryClient.invalidateQueries(trpc.resumes.getMany.queryOptions({}));
+      },
+      onError: (error) => {
+        toast.error(`Failed to create roadmap: ${error.message}`);
       },
     }),
   );

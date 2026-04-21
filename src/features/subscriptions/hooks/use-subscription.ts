@@ -3,8 +3,7 @@ import {useQuery} from "@tanstack/react-query";
 import {authClient} from "@/lib/auth-client";
 
 export const METER_MAP = {
-  mock_interview: "b3cb412f-9ec1-4caf-8ec7-01c18d965e46",
-  interview_questions: "86a993a1-0403-4f2f-a538-99f970f2b27f",
+  roadmap_generator: "1eb7e964-d0b8-4580-b27a-04fc093f3dca",
   cover_letter: "8633fed9-98e0-4fe3-8a0e-eb8bc2d980c9",
   resume_rewrite: "91795a3c-13bf-4546-abc5-6724a1da7ca3",
   ats_simulation: "cae3a6f0-39fd-40d2-bfe2-488a9a39e6d6",

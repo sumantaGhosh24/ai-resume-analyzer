@@ -6,9 +6,16 @@ import {
   coverLetterJob,
   processResume,
   rewriteResume,
+  roadmapJob,
 } from "@/inngest/functions";
 
 export const {GET, POST, PUT} = serve({
   client: inngest,
-  functions: [processResume, atsSimulation, rewriteResume, coverLetterJob],
+  functions: [
+    processResume,
+    atsSimulation,
+    rewriteResume,
+    coverLetterJob,
+    roadmapJob,
+  ],
 });

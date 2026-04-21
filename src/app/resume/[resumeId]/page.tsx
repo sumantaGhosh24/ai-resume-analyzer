@@ -7,6 +7,7 @@ import {
   prefetchCoverLetter,
   prefetchResume,
   prefetchRewrittenResume,
+  prefetchRoadmap,
 } from "@/features/resumes/server/prefetch";
 import {HydrateClient} from "@/trpc/server";
 import {
@@ -31,6 +32,8 @@ const ResumePage = async ({params}: PageProps<"/resume/[resumeId]">) => {
   prefetchRewrittenResume(resumeId);
 
   prefetchCoverLetter(resumeId);
+
+  prefetchRoadmap(resumeId);
 
   return (
     <HydrateClient>

@@ -37,6 +37,7 @@ import {
   useSuspenseCoverLetter,
   useSuspenseResume,
   useSuspenseRewrittenResume,
+  useSuspenseRoadmap,
 } from "../hooks/use-resumes";
 import ATSResults from "./ats-results";
 import CreateATSForm from "./creae-ats";
@@ -44,6 +45,8 @@ import RewrittenResume from "./rewritten-resume";
 import CreateRewrittenResume from "./create-rewritten-resume";
 import CoverLetter from "./cover-letter";
 import CreateCoverLetter from "./create-cover-letter";
+import Roadmap from "./roadmap";
+import CreateRoadmap from "./create-roadmap";
 
 export const ResumeLoading = () => {
   return <LoadingView message="Loading resume..." />;
@@ -75,6 +78,8 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
   const {data: rewritten} = useSuspenseRewrittenResume(resumeId);
 
   const {data: coverLetter} = useSuspenseCoverLetter(resumeId);
+
+  const {data: roadmap} = useSuspenseRoadmap(resumeId);
 
   const {primaryColor} = usePrimaryColor();
 
@@ -678,6 +683,15 @@ export const Resume = ({resumeId}: {resumeId: string}) => {
         <CoverLetter coverLetter={coverLetter} />
       ) : (
         <CreateCoverLetter
+          resumeId={resume.id}
+          jdId={resume?.analysis?.job?.id as string}
+          analyseId={resume?.analysis?.id as string}
+        />
+      )}
+      {roadmap ? (
+        <Roadmap roadmap={roadmap} />
+      ) : (
+        <CreateRoadmap
           resumeId={resume.id}
           jdId={resume?.analysis?.job?.id as string}
           analyseId={resume?.analysis?.id as string}

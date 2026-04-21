@@ -130,6 +130,30 @@ export const resumesRouter = createTRPCRouter({
 
       return resumeId;
     }),
+  createRoadmap: premiumProcedure
+    .input(
+      z.object({resumeId: z.string(), jdId: z.string(), analyseId: z.string()}),
+    )
+    .mutation(async ({input, ctx}) => {
+      await useMeter({
+        customerId: ctx.customer.id,
+        externalCustomerId: ctx.auth.user.id,
+        meterName: "roadmap_generator",
+      });
+
+      const {resumeId, analyseId, jdId} = input;
+
+      await inngest.send({
+        name: "resume/roadmap",
+        data: {
+          analyseId,
+          resumeId,
+          jdId,
+        },
+      });
+
+      return resumeId;
+    }),
   remove: protectedProcedure
     .input(z.object({id: z.string()}))
     .mutation(({ctx, input}) => {
@@ -246,6 +270,29 @@ export const resumesRouter = createTRPCRouter({
       });
 
       return analysis.coverLetter ?? null;
+    }),
+  getRoadmap: protectedProcedure
+    .input(z.object({resumeId: z.string()}))
+    .query(async ({ctx, input}) => {
+      const analysis = await prisma.analysis.findUniqueOrThrow({
+        where: {
+          resumeId: input.resumeId,
+          userId: ctx.auth.user.id,
+        },
+        include: {
+          roadmap: {
+            include: {
+              phases: {
+                include: {
+                  tasks: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return analysis.roadmap ?? null;
     }),
   getMany: protectedProcedure
     .input(

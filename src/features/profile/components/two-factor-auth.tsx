@@ -45,7 +45,6 @@ export const TwoFactorAuth = ({isEnabled}: {isEnabled: boolean}) => {
   const {isSubmitting} = form.formState;
 
   async function handleDisableTwoFactorAuth(data: TwoFactorAuthForm) {
-    console.log(data);
     await authClient.twoFactor.disable(
       {
         password: data.password,
@@ -64,7 +63,6 @@ export const TwoFactorAuth = ({isEnabled}: {isEnabled: boolean}) => {
   }
 
   async function handleEnableTwoFactorAuth(data: TwoFactorAuthForm) {
-    console.log(data);
     const result = await authClient.twoFactor.enable({
       password: data.password,
     });
