@@ -198,13 +198,16 @@ export const processResume = inngest.createFunction(
 
       await prisma.analysisScore.create({
         data: {
-          analysisId: analyseId,
+          analysis: {
+            connect: {
+              id: analyseId,
+            },
+          },
           totalScore: finalScore,
           skillMatch: skillScore,
           projectMatch: projectScore,
           responsibilityMatch: respScore,
           seniorityMatch: seniorityScore,
-          analysis: {},
         },
       });
 
