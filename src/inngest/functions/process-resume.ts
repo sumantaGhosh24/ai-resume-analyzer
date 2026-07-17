@@ -204,6 +204,7 @@ export const processResume = inngest.createFunction(
           projectMatch: projectScore,
           responsibilityMatch: respScore,
           seniorityMatch: seniorityScore,
+          analysis: {},
         },
       });
 
