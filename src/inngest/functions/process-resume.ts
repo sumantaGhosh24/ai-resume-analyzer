@@ -230,7 +230,7 @@ export const processResume = inngest.createFunction(
           ...suggestions.experience.map((e: string) => ({
             analysisId: analyseId,
             type: "EXPERIENCE",
-            content: e,
+            content: JSON.stringify(e),
           })),
           ...suggestions.projects.map((p: string) => ({
             analysisId: analyseId,
