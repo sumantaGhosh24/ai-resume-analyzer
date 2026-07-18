@@ -203,7 +203,7 @@ export const processResume = inngest.createFunction(
               id: analyseId,
             },
           },
-          totalScore: parseInt(finalScore),
+          totalScore: String(parseInt(finalScore)),
           skillMatch: skillScore,
           projectMatch: projectScore,
           responsibilityMatch: respScore,
