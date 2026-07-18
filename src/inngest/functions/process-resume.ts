@@ -203,7 +203,7 @@ export const processResume = inngest.createFunction(
               id: analyseId,
             },
           },
-          totalScore: String(parseInt(finalScore)),
+          totalScore: finalScore, // float is not assignable
           skillMatch: skillScore,
           projectMatch: projectScore,
           responsibilityMatch: respScore,
